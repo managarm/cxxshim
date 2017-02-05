@@ -1,0 +1,15 @@
+#ifndef _CXXSHIM_UTILITY
+#define _CXXSHIM_UTILITY
+
+#include <type_traits>
+
+namespace std {
+
+template<typename T>
+std::remove_reference_t<T> move(T &&x) {
+	return static_cast<std::remove_reference_t<T> &&>(x);
+}
+
+} // namespace std
+
+#endif // _CXXSHIM_UTILITY
