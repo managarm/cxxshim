@@ -1,0 +1,24 @@
+#ifndef _CXXSHIM_ALGORITHM
+#define _CXXSHIM_ALGORITHM
+
+namespace std {
+
+template<typename It, typename T>
+It find(It begin, It end, const T &value) {
+	for(auto it = begin; it != end; ++it)
+		if(*it == value)
+			return it;
+	return end;
+}
+
+template<typename It, typename Pred>
+It find_if(It begin, It end, Pred p) {
+	for(auto it = begin; it != end; ++it)
+		if(p(*it))
+			return it;
+	return end;
+}
+
+} // namespace std
+
+#endif // _CXXSHIM_ALGORITHM
