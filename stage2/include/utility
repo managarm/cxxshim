@@ -1,19 +1,61 @@
 #ifndef _CXXSHIM_UTILITY
 #define _CXXSHIM_UTILITY
 
+#include <stddef.h>
 #include <type_traits>
 
+#ifdef CXXSHIM_INTEGRATE_GCC
 #include <bits/move.h>
+#endif
 
-/*
 namespace std {
 
+#ifndef CXXSHIM_INTEGRATE_GCC
 template<typename T>
-std::remove_reference_t<T> move(T &&x) {
-	return static_cast<std::remove_reference_t<T> &&>(x);
+constexpr remove_reference_t<T> move(T &&x) noexcept {
+	return static_cast<remove_reference_t<T> &&>(x);
 }
 
+template<typename T>
+constexpr T &&forward(remove_reference_t<T> &x) noexcept {
+	return static_cast<T &&>(x);
+}
+
+template<typename T>
+void swap(T &x, T &y) {
+	T temp{move(x)};
+	x = move(y);
+	y = move(temp);
+}
+#endif // !defined(CXXSHIM_INTEGRATE_GCC)
+
+template<typename I, I... Seq>
+class integer_sequence { };
+
+template<size_t... Seq>
+using index_sequence = integer_sequence<size_t, Seq...>;
+
+namespace _make_seq {
+	template<typename I, I X, I N, I... Seq>
+	struct helper {
+		using type = typename helper<I, X + 1, N, Seq..., X>::type;
+	};
+
+	template<typename I, I N, I... Seq>
+	struct helper<I, N, N, Seq...> {
+		using type = integer_sequence<I, Seq...>;
+	};
+}
+
+template<typename I, I N>
+using make_integer_sequence = typename _make_seq::helper<I, 0, N>::type;
+
+template<size_t N>
+using make_index_sequence = make_integer_sequence<size_t, N>;
+
+template<typename... T>
+using index_sequence_for = make_index_sequence<sizeof...(T)>;
+
 } // namespace std
-*/
 
 #endif // _CXXSHIM_UTILITY

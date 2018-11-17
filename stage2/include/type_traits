@@ -1,0 +1,68 @@
+#ifndef _CXXSHIM_TYPE_TRAITS
+#define _CXXSHIM_TYPE_TRAITS
+
+#ifdef CXXSHIM_INTEGRATE_GCC
+
+#include_next <type_traits>
+
+#else // CXXSHIM_INTEGRATE_GCC
+
+namespace std {
+
+template<typename T>
+T declval();
+
+template<typename T>
+struct remove_reference {
+	typedef T type;
+};
+
+template<typename T>
+struct remove_reference<T &> {
+	typedef T type;
+};
+
+template<typename T>
+struct remove_reference<T &&> {
+	typedef T type;
+};
+
+template<typename T>
+using remove_reference_t = typename remove_reference<T>::type;
+
+namespace _void_impl {
+	template<typename... T>
+	struct helper {
+		using type = void;
+	};
+};
+
+template<typename... T>
+using void_t = typename _void_impl::helper<T...>::type;
+
+template<typename T>
+struct add_pointer {
+	using type = T *;
+};
+
+template<typename T>
+using add_pointer_t = typename add_pointer<T>::type;
+
+namespace _result_of_impl {
+	template<typename S, typename = void>
+	struct helper { };
+
+	template<typename F, typename... Args>
+	struct helper<F(Args...), void_t<decltype(declval<F>() (declval<Args>()...))>> {
+		using type = decltype(declval<F>() (declval<Args>()...));
+	};
+};
+
+template<typename T>
+using result_of_t = typename _result_of_impl::helper<T>::type;
+
+} // namespace std
+
+#endif // !defined(CXXSHIM_INTEGRATE_GCC)
+
+#endif // _CXXSHIM_TYPE_TRAITS
