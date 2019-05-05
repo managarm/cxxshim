@@ -29,6 +29,13 @@ void swap(T &x, T &y) {
 }
 #endif // !defined(CXXSHIM_INTEGRATE_GCC)
 
+template<class T, class U = T>
+T exchange(T &ref, U &&v) {
+	T temp = std::move(ref);
+	ref = std::forward<U>(v);
+	return temp;
+}
+
 template<typename I, I... Seq>
 class integer_sequence { };
 
