@@ -6,3 +6,7 @@ incl = include_directories('stage2/include')
 
 cxxshim_dep = declare_dependency(include_directories: incl)
 
+clang_coroutine_dep = declare_dependency(
+	include_directories: include_directories('clang-coroutine/include')
+)
+
