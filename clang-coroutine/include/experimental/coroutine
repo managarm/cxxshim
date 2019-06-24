@@ -21,6 +21,9 @@ struct coroutine_handle<void> {
         return coroutine_handle<>{frame};
     }
 
+	coroutine_handle()
+	: _frame{nullptr} { }
+
     void *address() {
         return _frame;
     }
