@@ -5,7 +5,34 @@ namespace std {
 
 // Only declared and not implemented for now.
 template<typename T>
-struct initializer_list;
+class initializer_list {
+public:
+	using value_type = T;
+	using iterator = const T*;
+	using const_iterator = const T*;
+	using size_type = size_t;
+
+	constexpr initializer_list() noexcept
+	: _array(0), _len(0) { }
+
+	constexpr size_type size() const noexcept {
+		return _len;
+	}
+
+	constexpr const_iterator begin() const noexcept {
+		return _array;
+	}
+
+	constexpr const_iterator end() const noexcept {
+		return _array + _len;
+	}
+private:
+	iterator _array;
+	size_type _len;
+
+	constexpr initializer_list(const_iterator array, size_type len)
+	: _array(array), _len(len) { }
+};
 
 } // namespace std
 
