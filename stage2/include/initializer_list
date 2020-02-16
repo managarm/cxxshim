@@ -1,0 +1,12 @@
+#ifndef _CXXSHIM_INITIALIZER_LIST
+#define _CXXSHIM_INITIALIZER_LIST
+
+namespace std {
+
+// Only declared and not implemented for now.
+template<typename T>
+struct initializer_list;
+
+} // namespace std
+
+#endif // _CXXSHIM_INITIALIZER_LIST
