@@ -1,0 +1,42 @@
+#ifndef _CXXSHIM_ITERATOR
+#define _CXXSHIM_ITERATOR
+
+namespace std {
+
+template<class Container>
+class back_insert_iterator {
+public:
+	explicit back_insert_iterator(Container &c) : _c(&c) { }
+
+	back_insert_iterator operator*() {
+		// no-op
+		return *this;
+	}
+
+	back_insert_iterator operator++() {
+		// no-op
+		return *this;
+	}
+	back_insert_iterator operator++(int val) {
+		// no-op
+		(void) val;
+		return *this;
+	}
+
+	back_insert_iterator &operator=(const typename Container::value_type
+	    &value) {
+		_c->push_back(value);
+		return *this;
+	}
+protected:
+	Container *_c;
+};
+
+template<class Container>
+back_insert_iterator<Container> back_inserter(Container &c) {
+	return back_insert_iterator<Container>(c);
+}
+
+} // namespace std
+
+#endif // _CXXSHIM_ITERATOR

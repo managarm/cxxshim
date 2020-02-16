@@ -19,6 +19,13 @@ It find_if(It begin, It end, Pred p) {
 	return end;
 }
 
+template<typename InIt, typename OutIt>
+OutIt copy(InIt begin, InIt end, OutIt d_first) {
+	while (begin != end)
+	    *d_first++ = *begin++;
+	return d_first;
+}
+
 } // namespace std
 
 #endif // _CXXSHIM_ALGORITHM
