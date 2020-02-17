@@ -1,9 +1,10 @@
 #ifndef _CXXSHIM_INITIALIZER_LIST
 #define _CXXSHIM_INITIALIZER_LIST
 
+#include <stddef.h>
+
 namespace std {
 
-// Only declared and not implemented for now.
 template<typename T>
 class initializer_list {
 public:
