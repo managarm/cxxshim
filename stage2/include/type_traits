@@ -9,6 +9,81 @@
 
 namespace std {
 
+template<class T, T v>
+struct integral_constant {
+	static constexpr T value = v;
+	using value_type = T;
+	using type = integral_constant;
+
+	constexpr operator value_type() const noexcept {
+		return value;
+	}
+
+	constexpr value_type operator()() const noexcept {
+		return value;
+	}
+};
+
+typedef integral_constant<bool, true> true_type;
+typedef integral_constant<bool, false> false_type;
+
+#define _DEFINE_SPEC0(_Name, _Type, _Value) \
+	template<> \
+	struct _Name<_Type> \
+	: public integral_constant<bool, _Value> { }
+
+// TODO: add remove_cv support to this
+template<typename T>
+struct is_integral : public false_type { };
+
+_DEFINE_SPEC0(is_integral, bool, true);
+_DEFINE_SPEC0(is_integral, char, true);
+_DEFINE_SPEC0(is_integral, signed char, true);
+_DEFINE_SPEC0(is_integral, unsigned char, true);
+_DEFINE_SPEC0(is_integral, short, true);
+_DEFINE_SPEC0(is_integral, unsigned short, true);
+_DEFINE_SPEC0(is_integral, int, true);
+_DEFINE_SPEC0(is_integral, unsigned int, true);
+_DEFINE_SPEC0(is_integral, long, true);
+_DEFINE_SPEC0(is_integral, unsigned long, true);
+_DEFINE_SPEC0(is_integral, long long, true);
+_DEFINE_SPEC0(is_integral, unsigned long long, true);
+
+template<typename T>
+struct is_floating_point : public false_type { };
+
+_DEFINE_SPEC0(is_floating_point, float, true);
+_DEFINE_SPEC0(is_floating_point, double, true);
+_DEFINE_SPEC0(is_floating_point, long double, true);
+
+#undef _DEFINE_SPEC0
+
+template<typename T>
+struct is_arithmetic : public integral_constant<bool, is_integral<T>::value ||
+				is_floating_point<T>::value> { };
+
+namespace detail {
+
+template<typename T, bool = is_arithmetic<T>::value>
+struct is_unsigned : public integral_constant<bool, T(0) < T(-1)> { };
+
+template<typename T>
+struct is_unsigned<T, false> : public false_type { };
+
+template<typename T, bool = is_arithmetic<T>::value>
+struct is_signed : public integral_constant<bool, T(-1) < T(0)> { };
+
+template<typename T>
+struct is_signed<T, false> : public false_type { };
+
+} // namespace detail
+
+template<typename T>
+struct is_unsigned : public detail::is_unsigned<T>::type { };
+
+template<typename T>
+struct is_signed : public detail::is_signed<T>::type { };
+
 template<typename T>
 T declval();
 
