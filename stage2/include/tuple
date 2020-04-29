@@ -9,6 +9,9 @@ struct tuple_size;
 template<size_t I, typename T>
 struct tuple_element;
 
+template<typename T>
+inline constexpr size_t tuple_size_v = tuple_size<T>::value;
+
 } // namespace std
 
 #endif // _CXXSHIM_TUPLE
