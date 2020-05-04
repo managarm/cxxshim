@@ -108,7 +108,7 @@ template<typename T>
 struct is_signed : public detail::is_signed<T>::type { };
 
 template<typename T>
-T declval();
+add_rvalue_reference_t<T> declval();
 
 template<typename T>
 struct remove_reference {
