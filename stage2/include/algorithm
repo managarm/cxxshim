@@ -3,6 +3,16 @@
 
 namespace std {
 
+template<typename T>
+const T &min(const T &a, const T &b) {
+	return (b < a) ? b : a;
+}
+
+template<typename T>
+const T &max(const T &a, const T &b) {
+	return (a < b) ? b : a;
+}
+
 template<typename It, typename T>
 It find(It begin, It end, const T &value) {
 	for(auto it = begin; it != end; ++it)
