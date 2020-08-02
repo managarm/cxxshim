@@ -13,6 +13,15 @@ inline void *operator new (size_t size, void *p) {
 	return p;
 }
 
+namespace std {
+
+template<typename T>
+[[nodiscard]] constexpr T *launder(T *p) noexcept {
+	return __builtin_launder(p);
+}
+
+} // namespace std
+
 #endif // !(CXXSHIM_INTEGRATE_GCC)
 
 #endif // _CXXSHIM_NEW
