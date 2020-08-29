@@ -1,6 +1,8 @@
 #ifndef _CXXSHIM_ALGORITHM
 #define _CXXSHIM_ALGORITHM
 
+#include <initializer_list>
+
 namespace std {
 
 template<typename T>
@@ -11,6 +13,32 @@ const T &min(const T &a, const T &b) {
 template<typename T>
 const T &max(const T &a, const T &b) {
 	return (a < b) ? b : a;
+}
+
+template <typename T>
+constexpr T min(std::initializer_list<T> list) {
+	auto it = list.begin();
+	T x = *it;
+	++it;
+	while(it != list.end()) {
+		if (*it < x)
+			x = *it;
+		++it;
+	}
+	return x;
+}
+
+template <typename T>
+constexpr T max(std::initializer_list<T> list) {
+	auto it = list.begin();
+	T x = *it;
+	++it;
+	while(it != list.end()) {
+		if (*it > x)
+			x = *it;
+		++it;
+	}
+	return x;
 }
 
 template<typename It, typename T>
@@ -32,7 +60,7 @@ It find_if(It begin, It end, Pred p) {
 template<typename InIt, typename OutIt>
 OutIt copy(InIt begin, InIt end, OutIt d_first) {
 	while (begin != end)
-	    *d_first++ = *begin++;
+		*d_first++ = *begin++;
 	return d_first;
 }
 
