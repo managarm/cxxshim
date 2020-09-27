@@ -174,11 +174,11 @@ using result_of_t = typename _result_of_impl::helper<T>::type;
 
 template<class F, class... ArgTypes>
 struct invoke_result {
-	using type = _result_of_impl::helper<F, ArgTypes...>::type;
+	using type = typename _result_of_impl::helper<F, ArgTypes...>::type;
 };
 
 template<class F, class... ArgTypes>
-using invoke_result_t = invoke_result<F, ArgTypes...>::type;
+using invoke_result_t = typename invoke_result<F, ArgTypes...>::type;
 
 template<bool B, class T = void>
 struct enable_if {};
