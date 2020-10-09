@@ -64,6 +64,12 @@ OutIt copy(InIt begin, InIt end, OutIt d_first) {
 	return d_first;
 }
 
+template<class OutputIt, class Size, class T>
+void fill_n(OutputIt first, Size count, const T &value) {
+	for (Size i = 0; i < count; i++)
+		*first++ = value;
+}
+
 } // namespace std
 
 #endif // _CXXSHIM_ALGORITHM
