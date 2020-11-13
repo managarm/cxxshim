@@ -17,7 +17,7 @@ struct coroutine_handle<void> {
     template<typename Promise>
     friend struct coroutine_handle;
 
-    static coroutine_handle<> from_address(void *frame) {
+    static coroutine_handle<> from_address(void *frame) noexcept {
         return coroutine_handle<>{frame};
     }
 
