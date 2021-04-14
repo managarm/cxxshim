@@ -7,6 +7,8 @@
 
 #else // CXXSHIM_INTEGRATE_GCC
 
+#include <stddef.h>
+
 namespace std {
 
 template<class T, T v>
@@ -123,6 +125,13 @@ inline constexpr bool is_same_v = is_same<T, U>::value;
 template<class T>
 struct is_void : is_same<T, void> {};
 
+template<class T> struct is_const : false_type {};
+template<class T> struct is_const<const T> : true_type {};
+
+template <class T> struct is_reference : false_type {};
+template <class T> struct is_reference<T&> : true_type {};
+template <class T> struct is_reference<T&&> : true_type {};
+
 template<typename T>
 add_rvalue_reference_t<T> declval();
 
@@ -143,6 +152,17 @@ struct remove_reference<T &&> {
 
 template<typename T>
 using remove_reference_t = typename remove_reference<T>::type;
+
+template< class T > struct remove_cv { typedef T type; };
+template< class T > struct remove_cv<const T> { typedef T type; };
+template< class T > struct remove_cv<volatile T> { typedef T type; };
+template< class T > struct remove_cv<const volatile T> { typedef T type; };
+
+template< class T > struct remove_const { typedef T type; };
+template< class T > struct remove_const<const T> { typedef T type; };
+
+template< class T > struct remove_volatile { typedef T type; };
+template< class T > struct remove_volatile<volatile T> { typedef T type; };
 
 namespace _void_impl {
 	template<typename... T>
@@ -304,6 +324,95 @@ struct is_convertible : integral_constant<bool,
 
 template<class From, class To>
 inline constexpr bool is_convertible_v = is_convertible<From, To>::value;
+
+template<bool B, class T, class F>
+struct conditional { typedef T type; };
+
+template<class T, class F>
+struct conditional<false, T, F> { typedef F type; };
+
+template<class T>
+struct is_array : std::false_type {};
+
+template<class T>
+struct is_array<T[]> : std::true_type {};
+
+template<class T, size_t N>
+struct is_array<T[N]> : std::true_type {};
+
+template<class T>
+struct remove_extent { typedef T type; };
+
+template<class T>
+struct remove_extent<T[]> { typedef T type; };
+
+template<class T, size_t N>
+struct remove_extent<T[N]> { typedef T type; };
+
+template<class T>
+struct is_function : std::integral_constant<
+		bool,
+		!std::is_const<const T>::value && !std::is_reference<T>::value >
+{};
+
+template<class T>
+struct decay {
+private:
+	typedef typename std::remove_reference<T>::type U;
+public:
+	typedef typename std::conditional<
+		std::is_array<U>::value,
+		typename std::remove_extent<U>::type*,
+		typename std::conditional<
+			std::is_function<U>::value,
+		typename std::add_pointer<U>::type,
+		typename std::remove_cv<U>::type
+			>::type
+	>::type type;
+};
+
+// primary template (used for zero types)
+template <class...>
+struct common_type {};
+
+// one type
+template <class T>
+struct common_type<T> : common_type<T, T> {};
+
+// two types
+template <class T1, class T2>
+using cond_t = decltype(false ? std::declval<T1>() : std::declval<T2>());
+
+template <class T1, class T2, class=void>
+struct common_type_2_impl {};
+
+template <class T1, class T2>
+struct common_type_2_impl<T1, T2, void_t<cond_t<T1, T2>>> {
+	using type = typename std::decay<cond_t<T1, T2>>::type;
+};
+
+template <class T1, class T2>
+struct common_type<T1, T2>
+: common_type_2_impl<typename std::decay<T1>::type,
+	typename std::decay<T2>::type>
+{};
+
+// 3+ types
+template <class AlwaysVoid, class T1, class T2, class...R>
+struct common_type_multi_impl {};
+
+template <class T1, class T2, class...R>
+struct common_type_multi_impl<
+void_t<typename common_type<T1, T2>::type>, T1, T2, R...>
+: common_type<typename common_type<T1, T2>::type, R...> {};
+
+
+template <class T1, class T2, class... R>
+struct common_type<T1, T2, R...>
+: common_type_multi_impl<void, T1, T2, R...> {};
+
+template< class... T >
+using common_type_t = typename common_type<T...>::type;
 
 } // namespace std
 
