@@ -1,0 +1,12 @@
+#ifndef _CXXSHIM_CSTDDEF
+#define _CXXSHIM_CSTDDEF
+
+#include <stddef.h>
+
+namespace std {
+
+enum class [[gnu::may_alias]] byte : unsigned char { };
+
+} // namespace std
+
+#endif // _CXXSHIM_CSTDDEF
