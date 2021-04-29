@@ -209,22 +209,26 @@ template<class T> struct remove_pointer<T * const volatile> { using type = T; };
 template<typename T>
 using remove_pointer_t = typename remove_pointer<T>::type;
 
-namespace _result_of_impl {
-	template<typename S, typename = void>
+namespace _invoke_result_impl {
+	template<bool, typename F, typename... Args>
 	struct helper { };
 
+	template <typename F, typename... Args>
+	concept is_invokable_with = requires (F f, Args ...args) {
+		f(static_cast<Args &&>(args)...);
+	};
+
 	template<typename F, typename... Args>
-	struct helper<F(Args...), void_t<decltype(declval<F>() (declval<Args>()...))>> {
+	struct helper<true, F, Args...> {
 		using type = decltype(declval<F>() (declval<Args>()...));
 	};
 };
 
-template<typename T>
-using result_of_t = typename _result_of_impl::helper<T>::type;
-
 template<class F, class... ArgTypes>
 struct invoke_result {
-	using type = typename _result_of_impl::helper<F, ArgTypes...>::type;
+	using type = typename _invoke_result_impl::helper<
+			_invoke_result_impl::is_invokable_with<F, ArgTypes...>,
+			F, ArgTypes...>::type;
 };
 
 template<class F, class... ArgTypes>
