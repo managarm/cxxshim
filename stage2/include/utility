@@ -12,7 +12,7 @@ namespace std {
 
 #ifndef CXXSHIM_INTEGRATE_GCC
 template<typename T>
-constexpr remove_reference_t<T> move(T &&x) noexcept {
+constexpr remove_reference_t<T> &&move(T &&x) noexcept {
 	return static_cast<remove_reference_t<T> &&>(x);
 }
 
@@ -42,20 +42,20 @@ class integer_sequence { };
 template<size_t... Seq>
 using index_sequence = integer_sequence<size_t, Seq...>;
 
-namespace _make_seq {
+namespace detail {
 	template<typename I, I X, I N, I... Seq>
-	struct helper {
-		using type = typename helper<I, X + 1, N, Seq..., X>::type;
+	struct _make_seq_helper {
+		using type = typename _make_seq_helper<I, X + 1, N, Seq..., X>::type;
 	};
 
 	template<typename I, I N, I... Seq>
-	struct helper<I, N, N, Seq...> {
+	struct _make_seq_helper<I, N, N, Seq...> {
 		using type = integer_sequence<I, Seq...>;
 	};
-}
+} // namespace detail
 
 template<typename I, I N>
-using make_integer_sequence = typename _make_seq::helper<I, 0, N>::type;
+using make_integer_sequence = typename detail::_make_seq_helper<I, 0, N>::type;
 
 template<size_t N>
 using make_index_sequence = make_integer_sequence<size_t, N>;
