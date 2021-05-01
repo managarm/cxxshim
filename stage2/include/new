@@ -9,7 +9,7 @@
 
 #else // CXXSHIM_INTEGRATE_GCC
 
-inline void *operator new (size_t size, void *p) {
+inline void *operator new (size_t, void *p) {
 	return p;
 }
 
