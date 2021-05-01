@@ -28,7 +28,7 @@ inline constexpr memory_order memory_order_release = memory_order::release;
 inline constexpr memory_order memory_order_acq_rel = memory_order::acq_rel;
 inline constexpr memory_order memory_order_seq_cst = memory_order::seq_cst;
 
-namespace detail_ {
+namespace detail {
 	template <typename T>
 	concept valid_atomic_type = 
 		std::is_trivially_copyable_v<T>
@@ -63,7 +63,7 @@ namespace detail_ {
 		>;
 	};
 
-	template <detail_::valid_atomic_type T, bool IsRef>
+	template <valid_atomic_type T, bool IsRef>
 	struct atomic_impl : difference_type_provider<T> {
 		static inline constexpr bool is_always_lock_free = __atomic_always_lock_free(sizeof(T), nullptr);
 
@@ -394,7 +394,7 @@ namespace detail_ {
 		storage<T, IsRef> stor_;
 	};
 
-} // namespace detail_
+} // namespace detail
 
 // These two should technically be `extern "C"`
 
@@ -414,7 +414,7 @@ inline T kill_dependency(T y) noexcept {
 }
 
 template <typename T>
-using atomic = detail_::atomic_impl<T, false>;
+using atomic = detail::atomic_impl<T, false>;
 
 using atomic_bool = atomic<bool>;
 using atomic_char = atomic<char>;
@@ -464,7 +464,7 @@ using atomic_intmax_t = atomic<intmax_t>;
 using atomic_uintmax_t = atomic<uintmax_t>;
 
 template <typename T>
-using atomic_ref = detail_::atomic_impl<T, true>;
+using atomic_ref = detail::atomic_impl<T, true>;
 
 template <typename T>
 inline void atomic_store(std::atomic<T> *obj,

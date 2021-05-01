@@ -182,15 +182,15 @@ template<class T> struct remove_const<const T> { typedef T type; };
 template<class T> struct remove_volatile { typedef T type; };
 template<class T> struct remove_volatile<volatile T> { typedef T type; };
 
-namespace _void_impl {
+namespace detail {
 	template<typename... T>
-	struct helper {
+	struct _void_impl_helper {
 		using type = void;
 	};
-};
+} // namespace detail
 
 template<typename... T>
-using void_t = typename _void_impl::helper<T...>::type;
+using void_t = typename detail::_void_impl_helper<T...>::type;
 
 template<typename T>
 struct add_pointer {
@@ -209,9 +209,9 @@ template<class T> struct remove_pointer<T * const volatile> { using type = T; };
 template<typename T>
 using remove_pointer_t = typename remove_pointer<T>::type;
 
-namespace _invoke_result_impl {
+namespace detail {
 	template<bool, typename F, typename... Args>
-	struct helper { };
+	struct _invoke_result_impl_helper { };
 
 	template <typename F, typename... Args>
 	concept is_invokable_with = requires (F f, Args ...args) {
@@ -219,15 +219,15 @@ namespace _invoke_result_impl {
 	};
 
 	template<typename F, typename... Args>
-	struct helper<true, F, Args...> {
+	struct _invoke_result_impl_helper<true, F, Args...> {
 		using type = decltype(declval<F>() (declval<Args>()...));
 	};
-};
+} // namespace detail
 
 template<class F, class... ArgTypes>
 struct invoke_result {
-	using type = typename _invoke_result_impl::helper<
-			_invoke_result_impl::is_invokable_with<F, ArgTypes...>,
+	using type = typename detail::_invoke_result_impl_helper<
+			detail::is_invokable_with<F, ArgTypes...>,
 			F, ArgTypes...>::type;
 };
 
@@ -252,7 +252,7 @@ struct is_trivially_constructible : bool_constant<__is_trivially_constructible(T
 template<class T>
 struct is_trivially_copyable : bool_constant<__is_trivially_copyable(T)> { };
 
-namespace _is_nt_constructible_impl {
+namespace detail {
 	template<bool, class T, class... Args>
 	struct is_nt_constructible_impl : false_type { };
 
@@ -264,15 +264,15 @@ namespace _is_nt_constructible_impl {
 
 	template<class T, class... Args>
 	struct is_nt_constructible : is_nt_constructible_impl< is_constructible<T, Args...>::value, T, Args...> { };
-}
+} // namespace detail
 
 template<class T, class... Args>
-struct is_nothrow_constructible : _is_nt_constructible_impl::is_nt_constructible<T, Args...> { };
+struct is_nothrow_constructible : detail::is_nt_constructible<T, Args...> { };
 
 template<class T>
-struct is_nothrow_default_constructible : _is_nt_constructible_impl::is_nt_constructible<T> { };
+struct is_nothrow_default_constructible : detail::is_nt_constructible<T> { };
 
-namespace _is_destructible_impl {
+namespace detail {
 	struct do_is_destructible_impl {
 		template<typename T, typename = decltype(declval<T&>().~_T())>
 		static true_type __test(int);
@@ -285,10 +285,10 @@ namespace _is_destructible_impl {
 	struct is_destructible_impl : do_is_destructible_impl {
 		using type = decltype(__test<T>(0));
 	};
-} // namespace _is_destructible_impl
+} // namespace detail
 
 template<class T>
-struct is_destructible : _is_destructible_impl::is_destructible_impl<T>::type {};
+struct is_destructible : detail::is_destructible_impl<T>::type {};
 
 template<class T>
 struct is_trivially_destructible : bool_constant<__has_trivial_destructor(T)> { };
@@ -530,7 +530,7 @@ struct common_type<T1, T2, R...>
 template< class... T >
 using common_type_t = typename common_type<T...>::type;
 
-namespace detail_ {
+namespace detail {
 	template <bool, typename>
 	struct underlying_type_helper { };
 
@@ -538,10 +538,10 @@ namespace detail_ {
 	struct underlying_type_helper<true, T> {
 		using type = __underlying_type(T);
 	};
-} // namespace detail_
+} // namespace detail
 
 template <typename T>
-struct underlying_type : detail_::underlying_type_helper<
+struct underlying_type : detail::underlying_type_helper<
 			is_enum_v<T>,
 			T
 		> { };
