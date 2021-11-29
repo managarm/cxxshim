@@ -1,0 +1,26 @@
+#ifndef _CXXSHIM_MEMORY
+#define _CXXSHIM_MEMORY
+
+namespace std {
+
+template <class T>
+T *addressof(const T &&) noexcept = delete;
+
+template <class T>
+T *addressof(T &r) noexcept {
+#if defined(__has_builtin)
+#  if __has_builtin(__builtin_addessof)
+        // clang __builtin_addessof language extension
+        // XXX: also gcc >= 7.0 supports it, but older <10 versions don't support
+        // __has_builtin macro
+	return __buitin_addressof(r);
+#  endif
+#else
+	return reinterpret_cast<T *>(
+      const_cast<char *>(&reinterpret_cast<const volatile char &>(r)));
+#endif // !defined(__has_builtin)
+}
+
+} // namespace std
+
+#endif // _CXXSHIM_MEMORY
