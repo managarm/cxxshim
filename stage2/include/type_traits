@@ -234,6 +234,20 @@ struct invoke_result {
 template<class F, class... ArgTypes>
 using invoke_result_t = typename invoke_result<F, ArgTypes...>::type;
 
+template<class F, class... ArgTypes>
+struct is_invocable;
+
+template<class F, class... ArgTypes>
+requires detail::is_invokable_with<F, ArgTypes...>
+struct is_invocable<F, ArgTypes...> : std::true_type {};
+
+template<class F, class... ArgTypes>
+requires (!detail::is_invokable_with<F, ArgTypes...>)
+struct is_invocable<F, ArgTypes...> : std::false_type {};
+
+template<class F, class... ArgTypes>
+inline constexpr bool is_invocable_v = is_invocable<F, ArgTypes...>::value;
+
 template<bool B, class T = void>
 struct enable_if {};
 
