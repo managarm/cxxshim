@@ -1,8 +1,6 @@
-project('cxxshim', 'cpp')
+project('cxxshim', default_options: ['cpp_std=c++20'])
 
 incl = include_directories('stage2/include')
-
-# TODO: install_headers
 
 cxxshim_dep = declare_dependency(include_directories: incl)
 
@@ -14,3 +12,26 @@ std_coroutine_dep = declare_dependency(
 	include_directories: include_directories('std-coroutine/include')
 )
 
+if get_option('install_headers')
+	install_headers(
+		'stage2/include/algorithm',
+		'stage2/include/atomic',
+		'stage2/include/cstddef',
+		'stage2/include/cstdint',
+		'stage2/include/initializer_list',
+		'stage2/include/iterator',
+		'stage2/include/memory',
+		'stage2/include/new',
+		'stage2/include/tuple',
+		'stage2/include/type_traits',
+		'stage2/include/utility',
+		subdir: 'stage2',
+	)
+endif
+
+pkg = import('pkgconfig')
+pkg.generate(
+	name: 'cxxshim',
+	description: 'Shim for freestanding C++',
+	subdirs: ['stage2'],
+)
