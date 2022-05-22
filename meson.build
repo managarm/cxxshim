@@ -35,21 +35,21 @@ if get_option('install_headers')
 		'std-coroutine/include/coroutine',
 		subdir: 'std-coroutine',
 	)
-endif
 
-pkg = import('pkgconfig')
-pkg.generate(
-	name: 'cxxshim',
-	description: 'Shim for freestanding C++',
-	subdirs: ['stage2'],
-)
-pkg.generate(
-	name: 'cxxshim-coroutine-clang',
-	description: 'Shim for freestanding C++ (clang coroutine headers)',
-	subdirs: ['clang-coroutine'],
-)
-pkg.generate(
-	name: 'cxxshim-coroutine-std',
-	description: 'Shim for freestanding C++ (std coroutine headers)',
-	subdirs: ['std-coroutine'],
-)
+	pkg = import('pkgconfig')
+	pkg.generate(
+		name: 'cxxshim',
+		description: 'Shim for freestanding C++',
+		subdirs: ['stage2'],
+	)
+	pkg.generate(
+		name: 'cxxshim-coroutine-clang',
+		description: 'Shim for freestanding C++ (clang coroutine headers)',
+		subdirs: ['clang-coroutine'],
+	)
+	pkg.generate(
+		name: 'cxxshim-coroutine-std',
+		description: 'Shim for freestanding C++ (std coroutine headers)',
+		subdirs: ['std-coroutine'],
+	)
+endif
