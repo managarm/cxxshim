@@ -27,6 +27,14 @@ if get_option('install_headers')
 		'stage2/include/utility',
 		subdir: 'stage2',
 	)
+	install_headers(
+		'clang-coroutine/include/experimental/coroutine',
+		subdir: 'clang-coroutine/experimental',
+	)
+	install_headers(
+		'std-coroutine/include/coroutine',
+		subdir: 'std-coroutine',
+	)
 endif
 
 pkg = import('pkgconfig')
@@ -34,4 +42,14 @@ pkg.generate(
 	name: 'cxxshim',
 	description: 'Shim for freestanding C++',
 	subdirs: ['stage2'],
+)
+pkg.generate(
+	name: 'cxxshim-coroutine-clang',
+	description: 'Shim for freestanding C++ (clang coroutine headers)',
+	subdirs: ['clang-coroutine'],
+)
+pkg.generate(
+	name: 'cxxshim-coroutine-std',
+	description: 'Shim for freestanding C++ (std coroutine headers)',
+	subdirs: ['std-coroutine'],
 )
