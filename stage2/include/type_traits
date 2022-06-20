@@ -133,8 +133,14 @@ struct add_const
 template<typename T>
 struct is_unsigned : public detail::is_unsigned<T>::type { };
 
+template< class T >
+inline constexpr bool is_unsigned_v = is_unsigned<T>::value;
+
 template<typename T>
 struct is_signed : public detail::is_signed<T>::type { };
+
+template< class T >
+inline constexpr bool is_signed_v = is_signed<T>::value;
 
 template<class T, class U>
 struct is_same : false_type {};
