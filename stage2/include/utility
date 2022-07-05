@@ -63,38 +63,7 @@ using make_index_sequence = make_integer_sequence<size_t, N>;
 template<typename... T>
 using index_sequence_for = make_index_sequence<sizeof...(T)>;
 
-struct source_location {
-	static consteval source_location current(
-			const char *file = __builtin_FILE(),
-			const char *function = __builtin_FUNCTION(),
-			unsigned int line = __builtin_LINE(),
-// GCC 10 has all builtins except for __builtin_COLUMN.
-#if __has_builtin(__builtin_COLUMN)
-			unsigned int column = __builtin_COLUMN()) {
-#else
-			unsigned int column = 0) {
-#endif
-		source_location sl;
-		sl.file_ = file;
-		sl.function_ = function;
-		sl.line_ = line;
-		sl.column_ = column;
-		return sl;
-	}
 
-	source_location() = default;
-
-	auto file() { return file_; }
-	auto function() { return function_; }
-	auto line() { return line_; }
-	auto column() { return column_; }
-
-private:
-	const char *file_ = nullptr;
-	const char *function_ = nullptr;
-	unsigned int line_ = 0;
-	unsigned int column_ = 0;
-};
 
 } // namespace std
 
