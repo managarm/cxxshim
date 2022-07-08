@@ -1,0 +1,6 @@
+#ifndef _CXXSHIM_CINTTYPES
+#define _CXXSHIM_CINTTYPES
+
+#include <inttypes.h>
+
+#endif // _CXXSHIM_CINTTYPES
