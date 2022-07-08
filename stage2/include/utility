@@ -63,6 +63,8 @@ using make_index_sequence = make_integer_sequence<size_t, N>;
 template<typename... T>
 using index_sequence_for = make_index_sequence<sizeof...(T)>;
 
+struct piecewise_construct_t { explicit piecewise_construct_t() = default; };
+
 struct source_location {
 	static consteval source_location current(
 			const char *file = __builtin_FILE(),
