@@ -1,6 +1,8 @@
 #ifndef _CXXSHIM_MEMORY
 #define _CXXSHIM_MEMORY
 
+#include <stddef.h>
+
 namespace std {
 
 template <class T>
@@ -14,10 +16,37 @@ T *addressof(T &r) noexcept {
         // __has_builtin macro
 	return __buitin_addressof(r);
 #else
-	return reinterpret_cast<T *>(
-      const_cast<char *>(&reinterpret_cast<const volatile char &>(r)));
+	return reinterpret_cast<T *>(const_cast<char *>(&reinterpret_cast<const volatile char &>(r)));
 #endif // !defined(__has_builtin)
 }
+
+template<typename Type>
+struct allocator
+{
+	using value_type = Type;
+	using pointer = Type*;
+	using const_pointer = const Type*;
+	using reference = Type&;
+	using const_reference = const Type&;
+	using size_type = size_t;
+	using difference_type = ptrdiff_t;
+
+	[[nodiscard]] constexpr Type *allocate(size_t size)
+	{
+		return static_cast<Type*>(::operator new(size * sizeof(Type)));
+	}
+
+	constexpr void deallocate(Type *ptr, size_t = 0)
+	{
+		::operator delete(ptr);
+	}
+
+	template<typename T1, typename T2>
+	friend constexpr bool operator==(const allocator<T1> &, const allocator<T2> &) noexcept
+	{
+		return true;
+	}
+};
 
 } // namespace std
 
