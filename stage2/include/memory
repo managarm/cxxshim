@@ -41,8 +41,7 @@ struct allocator
 		::operator delete(ptr);
 	}
 
-	template<typename T1, typename T2>
-	friend constexpr bool operator==(const allocator<T1> &, const allocator<T2> &) noexcept
+	friend constexpr bool operator==(const allocator &, const allocator &) noexcept
 	{
 		return true;
 	}
