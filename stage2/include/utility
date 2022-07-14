@@ -64,6 +64,7 @@ template<typename... T>
 using index_sequence_for = make_index_sequence<sizeof...(T)>;
 
 struct piecewise_construct_t { explicit piecewise_construct_t() = default; };
+inline constexpr piecewise_construct_t piecewise_construct { };
 
 struct source_location {
 	static consteval source_location current(
