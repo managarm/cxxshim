@@ -882,6 +882,29 @@ struct is_nothrow_convertible<From, To> : true_type { };
 template<class From, class To>
 inline constexpr bool is_nothrow_convertible_v = is_nothrow_convertible<From, To>::value;
 
+namespace detail
+{
+	template<size_t Len>
+	struct default_alignment
+	{
+		union type
+		{
+			unsigned char data[Len];
+			struct __attribute__((aligned)) { } align;
+		};
+	};
+} // namespace detail
+
+template<size_t Len, size_t Align = alignof(typename detail::default_alignment<Len>::type)>
+struct aligned_storage {
+    struct type {
+        alignas(Align) unsigned char data[Len];
+    };
+};
+
+template<size_t Len, size_t Align = alignof(typename detail::default_alignment<Len>::type)>
+using aligned_storage_t = typename aligned_storage<Len, Align>::type;
+
 template<size_t Len, class... Types>
 struct aligned_union
 {
