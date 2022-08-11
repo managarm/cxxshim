@@ -100,7 +100,7 @@ struct source_location {
 #if __has_builtin(__builtin_COLUMN)
 			unsigned int column = __builtin_COLUMN()) {
 #else
-			unsigned int column = 0;
+			unsigned int column = 0) {
 #endif
 		source_location sl;
 		sl.file_ = file;
