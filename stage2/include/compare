@@ -268,7 +268,6 @@ class strong_ordering {
     {
         return v < 0 ? strong_ordering::greater : (v > 0 ? strong_ordering::less : v);
     }
-
 };
 
 inline constexpr strong_ordering strong_ordering::less(cmp::order::less);

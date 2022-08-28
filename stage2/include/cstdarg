@@ -5,7 +5,9 @@
 
 namespace std
 {
-    using ::va_list;
+
+using ::va_list;
+
 } // namespace std
 
 #endif // _CXXSHIM_CSTDARG
