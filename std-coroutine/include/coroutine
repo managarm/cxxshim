@@ -16,7 +16,7 @@ struct coroutine_handle<void> {
     template<typename Promise>
     friend struct coroutine_handle;
 
-    static coroutine_handle<> from_address(void *frame) {
+    static coroutine_handle<> from_address(void *frame) noexcept {
         return coroutine_handle<>{frame};
     }
 
@@ -74,15 +74,15 @@ private:
 };
 
 struct suspend_never {
-    bool await_ready() const { return true; }
-    void await_suspend(coroutine_handle<>) const {}
-    void await_resume() const {}
+    bool await_ready() const noexcept { return true; }
+    void await_suspend(coroutine_handle<>) const noexcept {}
+    void await_resume() const noexcept {}
 };
 
 struct suspend_always {
-    bool await_ready() const { return false; }
-    void await_suspend(coroutine_handle<>) const {}
-    void await_resume() const {}
+    bool await_ready() const noexcept { return false; }
+    void await_suspend(coroutine_handle<>) const noexcept {}
+    void await_resume() const noexcept {}
 };
 
 } // namespace std
