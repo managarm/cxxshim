@@ -272,6 +272,11 @@ struct is_invocable<F, ArgTypes...> : std::false_type {};
 template<class F, class... ArgTypes>
 inline constexpr bool is_invocable_v = is_invocable<F, ArgTypes...>::value;
 
+using detail::type_identity;
+
+template<class T>
+using type_identity_t = typename type_identity<T>::type;
+
 template<bool B, class T = void>
 struct enable_if {};
 
