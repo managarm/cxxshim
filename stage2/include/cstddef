@@ -8,7 +8,8 @@ namespace std {
 enum class [[gnu::may_alias]] byte : unsigned char { };
 
 using nullptr_t = decltype(nullptr);
-using size_t = ::size_t;
+using ::ptrdiff_t;
+using ::size_t;
 
 } // namespace std
 

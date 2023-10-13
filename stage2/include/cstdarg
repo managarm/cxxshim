@@ -1,0 +1,13 @@
+#ifndef _CXXSHIM_CSTDARG
+#define _CXXSHIM_CSTDARG
+
+#include <stdarg.h>
+
+namespace std
+{
+
+using ::va_list;
+
+} // namespace std
+
+#endif // _CXXSHIM_CSTDARG

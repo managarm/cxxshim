@@ -1,0 +1,6 @@
+#ifndef _CXXSHIM_CLIMITS
+#define _CXXSHIM_CLIMITS
+
+#include <limits.h>
+
+#endif // _CXXSHIM_CLIMITS
