@@ -15,6 +15,7 @@ std_coroutine_dep = declare_dependency(
 if get_option('install_headers')
 	install_headers(
 		'stage2/include/algorithm',
+		'stage2/include/array',
 		'stage2/include/atomic',
 		'stage2/include/cstddef',
 		'stage2/include/cstdint',
