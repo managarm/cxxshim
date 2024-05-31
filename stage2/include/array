@@ -47,12 +47,10 @@ struct array {
 	}
 
 	[[nodiscard]] reference operator[](std::size_t n) noexcept {
-		assert(n < this->size());
 		return elements_[n];
 	}
 
 	[[nodiscard]] const_reference operator[](std::size_t n) const noexcept {
-		assert(n < this->size());
 		return elements_[n];
 	}
 
