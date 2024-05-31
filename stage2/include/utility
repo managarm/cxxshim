@@ -96,6 +96,18 @@ private:
 	unsigned int column_ = 0;
 };
 
+template<typename t1, typename t2>
+struct pair {
+	t1 first;
+	t2 second;
+
+};
+
+template<typename t1, typename t2, typename u1, typename u2>
+constexpr bool operator==(const pair<t1, t2> &x, const pair<u1, u2> &y) {
+	return x.first == y.first && x.second == y.second;
+}
+
 } // namespace std
 
 #endif // _CXXSHIM_UTILITY
