@@ -1,0 +1,13 @@
+#ifndef _CXXSHIM_CINTTYPES
+#define _CXXSHIM_CINTTYPES
+
+#include <inttypes.h>
+
+namespace std
+{
+
+using ::imaxdiv_t;
+
+} // namespace std
+
+#endif // _CXXSHIM_CINTTYPES

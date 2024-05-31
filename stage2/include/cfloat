@@ -1,0 +1,6 @@
+#ifndef _CXXSHIM_CFLOAT
+#define _CXXSHIM_CFLOAT
+
+#include <float.h>
+
+#endif // _CXXSHIM_CFLOAT
