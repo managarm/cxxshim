@@ -5,41 +5,41 @@
 
 namespace std {
 
-template<typename element, std::size_t count>
+template<typename Element, std::size_t Count>
 struct __array_container {
-	using type = element[count];
+	using type = Element[Count];
 };
 
-template<typename element>
-struct __array_container<element, 0> {
+template<typename Element>
+struct __array_container<Element, 0> {
 	struct type {
-		element &operator[](std::size_t) const noexcept {
+		Element &operator[](std::size_t) const noexcept {
 			__builtin_trap();
 		}
 
-		constexpr explicit operator element*() const noexcept {
+		constexpr explicit operator Element*() const noexcept {
 			return nullptr;
 		}
 	};
 };
 
-template<typename element, std::size_t count>
+template<typename Element, std::size_t Count>
 struct array {
-	typedef element *pointer;
-	typedef const element *const_pointer;
-	typedef element &reference;
-	typedef const element &const_reference;
-	typedef element *iterator;
-	typedef const element *const_iterator;
+	typedef Element *pointer;
+	typedef const Element *const_pointer;
+	typedef Element &reference;
+	typedef const Element &const_reference;
+	typedef Element *iterator;
+	typedef const Element *const_iterator;
 
-	typename __array_container<element, count>::type elements_;
+	typename __array_container<Element, Count>::type elements_;
 
 	[[nodiscard]] constexpr std::size_t size() const noexcept {
-		return count;
+		return Count;
 	}
 
 	[[nodiscard]] constexpr std::size_t max_size() const noexcept {
-		return count;
+		return Count;
 	}
 
 	[[nodiscard]] constexpr bool empty() const noexcept {
@@ -71,11 +71,11 @@ struct array {
 	}
 
 	[[nodiscard]] iterator end() noexcept {
-		return iterator(data() + count);
+		return iterator(data() + Count);
 	}
 
 	[[nodiscard]] const_iterator end() const noexcept {
-		return const_iterator(data() + count);
+		return const_iterator(data() + Count);
 	}
 };
 
