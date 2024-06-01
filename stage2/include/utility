@@ -96,15 +96,14 @@ private:
 	unsigned int column_ = 0;
 };
 
-template<typename t1, typename t2>
+template<typename T1, typename T2>
 struct pair {
-	t1 first;
-	t2 second;
-
+	T1 first;
+	T2 second;
 };
 
-template<typename t1, typename t2, typename u1, typename u2>
-constexpr bool operator==(const pair<t1, t2> &x, const pair<u1, u2> &y) {
+template<typename T1, typename T2, typename U1, typename U2>
+constexpr bool operator==(const pair<T1, T2> &x, const pair<U1, U2> &y) {
 	return x.first == y.first && x.second == y.second;
 }
 
